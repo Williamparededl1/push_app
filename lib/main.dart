@@ -16,7 +16,10 @@ void main() async {
 
   runApp(MultiBlocProvider(providers: [
     BlocProvider(
-      create: (_) => NotificationsBloc(),
+      create: (_) => NotificationsBloc(
+          requestLocalNotificationPermissions:
+              LocalNotification.requestPermisionLocalNotificacions,
+          showLocalNotification: LocalNotification.showLocalNotification),
     )
   ], child: const MainApp()));
 }
