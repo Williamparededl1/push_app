@@ -1,8 +1,11 @@
 part of 'notifications_bloc.dart';
 
-sealed class NotificationsEvent extends Equatable {
+sealed class NotificationsEvent {
   const NotificationsEvent();
+}
 
-  @override
-  List<Object> get props => [];
+class NotificationStatusChanged extends NotificationsEvent {
+  final AuthorizationStatus status;
+
+  const NotificationStatusChanged(this.status);
 }
