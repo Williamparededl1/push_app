@@ -44,10 +44,8 @@ class _HomeView extends StatelessWidget {
         return ListTile(
           title: Text(notification.title),
           subtitle: Text(notification.body),
-          leading: Image.network(
-            notification.imageUrl ?? '',
-            fit: BoxFit.cover,
-          ),
+          leading: Image.network(notification.imageUrl ??
+              'https://ih1.redbubble.net/image.1861329778.2941/st,small,845x845-pad,1000x1000,f8f8f8.jpg'),
           onTap: () => context.push('/push-details/${notification.messageId}'),
         );
       },
