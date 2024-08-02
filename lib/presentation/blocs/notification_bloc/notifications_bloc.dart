@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:push_app/domain/entities/push_message.dart';
 import 'package:push_app/firebase_options.dart';
 
 part 'notifications_event.dart';
@@ -19,6 +22,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationsBloc() : super(const NotificationsState()) {
     on<NotificationStatusChanged>(_notificationStatusChanged);
+    on<NotificationReceived>(_onPushMessageRecived);
     _initialStatusCheck();
     _onForegroundMessage();
   }
@@ -32,6 +36,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   void _notificationStatusChanged(
       NotificationStatusChanged event, Emitter<NotificationsState> emit) {
     emit(state.copyWith(status: event.status));
+  }
+
+  void _onPushMessageRecived(
+      NotificationReceived event, Emitter<NotificationsState> emit) {
+    emit(state
+        .copyWith(notifications: [event.notification, ...state.notifications]));
   }
 
   void _initialStatusCheck() async {
@@ -48,10 +58,21 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   void _handleRemoveMessage(RemoteMessage remoteMessage) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${remoteMessage.data}');
-
     if (remoteMessage.notification == null) return;
+
+    final notification = PushMessage(
+        messageId:
+            remoteMessage.messageId?.replaceAll(':', '').replaceAll('%', '') ??
+                '',
+        title: remoteMessage.notification!.title ?? '',
+        body: remoteMessage.notification!.body ?? '',
+        sentDate: remoteMessage.sentTime ?? DateTime.now(),
+        data: remoteMessage.data,
+        imageUrl: Platform.isAndroid
+            ? remoteMessage.notification!.android?.imageUrl
+            : remoteMessage.notification!.apple?.imageUrl);
+
+    add(NotificationReceived(notification));
   }
 
   void _onForegroundMessage() {
@@ -70,5 +91,17 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     );
     add(NotificationStatusChanged(settings.authorizationStatus));
     _getFCMToken();
+  }
+
+  PushMessage? getMessageById(String pushMessageId) {
+    final exits = state.notifications.any(
+      (element) => element.messageId == pushMessageId,
+    );
+
+    if (!exits) return null;
+
+    return state.notifications.firstWhere(
+      (element) => element.messageId == pushMessageId,
+    );
   }
 }

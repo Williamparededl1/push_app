@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:push_app/domain/entities/push_message.dart';
 import 'package:push_app/presentation/blocs/notification_bloc/notifications_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -33,11 +34,19 @@ class _HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notifications =
+        context.watch<NotificationsBloc>().state.notifications;
     return ListView.builder(
-      itemCount: 1,
+      itemCount: notifications.length,
       itemBuilder: (context, index) {
-        return const ListTile(
-          title: Text('Conceder permisos'),
+        final PushMessage notification = notifications[index];
+        return ListTile(
+          title: Text(notification.title),
+          subtitle: Text(notification.body),
+          leading: Image.network(
+            notification.imageUrl ?? '',
+            fit: BoxFit.cover,
+          ),
         );
       },
     );
