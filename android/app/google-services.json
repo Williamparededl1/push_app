@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1056205537517",
+    "project_id": "flutter-notification-ea17a",
+    "storage_bucket": "flutter-notification-ea17a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1056205537517:android:a4cb64d21d4bd14ed28ce4",
+        "android_client_info": {
+          "package_name": "com.paredeswillian95.push_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlaIaCXRsCSxze0GIAmZ83KMS1on-XlNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
