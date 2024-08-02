@@ -57,7 +57,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     print('TOKEN = $tokenDis');
   }
 
-  void _handleRemoveMessage(RemoteMessage remoteMessage) {
+  void handleRemoveMessage(RemoteMessage remoteMessage) {
     if (remoteMessage.notification == null) return;
 
     final notification = PushMessage(
@@ -76,7 +76,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   void _onForegroundMessage() {
-    FirebaseMessaging.onMessage.listen(_handleRemoveMessage);
+    FirebaseMessaging.onMessage.listen(handleRemoveMessage);
   }
 
   void requestPermission() async {
