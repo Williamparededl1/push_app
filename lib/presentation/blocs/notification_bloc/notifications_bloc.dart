@@ -88,7 +88,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
           id: ++pushNumber,
           body: notification.body,
           title: notification.title,
-          data: notification.data.toString());
+          data: notification.messageId);
     }
 
     add(NotificationReceived(notification));
